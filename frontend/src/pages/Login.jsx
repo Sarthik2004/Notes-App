@@ -22,7 +22,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/auth/login",
+        "https://notes-app-f40r.onrender.com/auth/login",
         form
       );
 

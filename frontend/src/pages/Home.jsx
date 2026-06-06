@@ -9,7 +9,7 @@ const Home = () => {
   const [listnote, setlistnote] = useState([]);
   const [editId, setEditId] = useState(null);
 
-  const API = "http://localhost:3000/api/notes";
+  const API = "https://notes-app-f40r.onrender.com/api/notes";
 
   // TOKEN
   const token = localStorage.getItem("token");

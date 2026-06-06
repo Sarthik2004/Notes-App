@@ -23,7 +23,7 @@ const Register = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/auth/register",
+        "https://notes-app-f40r.onrender.com/auth/register",
         form
       );
 
