@@ -5,6 +5,8 @@ import { useNavigate } from "react-router";
 const Register = () => {
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -22,6 +24,8 @@ const Register = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
+
       const res = await axios.post(
         "https://notes-app-f40r.onrender.com/auth/register",
         form
@@ -37,12 +41,13 @@ const Register = () => {
         error?.response?.data?.message ||
           "Registration Failed"
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="h-screen w-full bg-[#0b1120] flex items-center justify-center overflow-hidden relative px-4">
-
       {/* Background */}
       <div className="absolute w-[300px] h-[300px] bg-purple-600/20 blur-3xl rounded-full -top-24 -left-24"></div>
 
@@ -50,10 +55,8 @@ const Register = () => {
 
       {/* Main Container */}
       <div className="relative z-10 w-full max-w-5xl h-[82vh] rounded-[30px] overflow-hidden grid lg:grid-cols-2 bg-[#111827]/85 backdrop-blur-2xl border border-white/10 shadow-2xl">
-
         {/* LEFT SIDE */}
         <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-violet-700 via-purple-600 to-fuchsia-500 p-10 relative overflow-hidden">
-
           <div>
             {/* Logo */}
             <div className="flex items-center gap-4 mb-10">
@@ -75,7 +78,8 @@ const Register = () => {
 
             {/* Paragraph */}
             <p className="mt-8 text-[18px] leading-8 text-purple-100 max-w-md">
-              Join now and organize your ideas beautifully with our modern notes app.
+              Join now and organize your ideas beautifully with our modern
+              notes app.
             </p>
           </div>
 
@@ -108,9 +112,7 @@ const Register = () => {
 
         {/* RIGHT SIDE */}
         <div className="flex items-center justify-center bg-[#111827]/95 px-8">
-
           <div className="w-full max-w-md">
-
             {/* Mobile Logo */}
             <div className="flex lg:hidden items-center justify-center gap-3 mb-8">
               <div className="w-12 h-12 rounded-2xl bg-white text-purple-700 flex items-center justify-center text-2xl">
@@ -135,7 +137,6 @@ const Register = () => {
 
             {/* Form */}
             <form onSubmit={handleRegister} className="space-y-5">
-
               {/* Name */}
               <div>
                 <label className="block mb-2 text-sm sm:text-base font-semibold text-gray-300">
@@ -147,8 +148,9 @@ const Register = () => {
                   name="name"
                   value={form.name}
                   onChange={handleChange}
+                  disabled={loading}
                   placeholder="Enter your name"
-                  className="w-full h-12 px-5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-gray-500"
+                  className="w-full h-12 px-5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-gray-500 disabled:opacity-60"
                   required
                 />
               </div>
@@ -164,8 +166,9 @@ const Register = () => {
                   name="email"
                   value={form.email}
                   onChange={handleChange}
+                  disabled={loading}
                   placeholder="Enter your email"
-                  className="w-full h-12 px-5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-gray-500"
+                  className="w-full h-12 px-5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-gray-500 disabled:opacity-60"
                   required
                 />
               </div>
@@ -181,8 +184,9 @@ const Register = () => {
                   name="password"
                   value={form.password}
                   onChange={handleChange}
+                  disabled={loading}
                   placeholder="Create password"
-                  className="w-full h-12 px-5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-gray-500"
+                  className="w-full h-12 px-5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:ring-2 focus:ring-purple-500 placeholder:text-gray-500 disabled:opacity-60"
                   required
                 />
               </div>
@@ -190,24 +194,36 @@ const Register = () => {
               {/* Button */}
               <button
                 type="submit"
-                className="w-full h-12 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 text-white text-lg font-bold shadow-[0_10px_30px_rgba(168,85,247,0.4)] hover:scale-[1.02] transition-all duration-300"
+                disabled={loading}
+                className="w-full h-12 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 text-white text-lg font-bold shadow-[0_10px_30px_rgba(168,85,247,0.4)] hover:scale-[1.02] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-3"
               >
-                Create Account
+                {loading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Creating Account...
+                  </>
+                ) : (
+                  "Create Account"
+                )}
               </button>
+
+              {loading && (
+                <p className="text-center text-gray-400 text-sm mt-3">
+                  Please wait... Server is starting up.
+                </p>
+              )}
             </form>
 
             {/* Bottom Text */}
             <p className="text-center text-gray-400 mt-6 text-sm sm:text-base">
               Already have an account?
-
               <span
-                onClick={() => navigate("/login")}
+                onClick={() => !loading && navigate("/login")}
                 className="text-purple-400 ml-2 font-semibold cursor-pointer hover:text-pink-400"
               >
                 Login
               </span>
             </p>
-
           </div>
         </div>
       </div>
